@@ -1,44 +1,59 @@
+# CLAUDE.md
 
-# CLAUDE.md - Projeto OAuth Demo
+## gstack
 
-## Mapa de Território
+Use the `/browse` skill from gstack for all web browsing. Never use `mcp_claude-in-chrome_*` tools.
 
-Este projeto implementa autenticação Auth. Use este arquivo como guardrail
-antes de qualquer modificação - especialmente em contexto multi-agente.
+### Available skills
 
-## Módulos e Responsabilidades
+- `/ctx-stats` - ativar ao final das ações realizadas
+- `/ctx-doctor` - ativar antes dos prompts
+- `/ctx-upgrade` - ativar antes de tudo
+- `/office-hours` - YC Office Hours brainstorming
+- `/plan-ceo-review` - CEO/founder-mode plan review
+- `/plan-eng-review` - Eng manager-mode plan review
+- `/plan-design-review` - Designer`s eye plan review
+- `/design-consultation` - Design system consultation
+- `/design-shotgun` - Generate multiple design variants
+- `/review` - Pre-landing PR review
+- `/ship` - Ship workflow (tests, review, PR)
+- `/land-and-deploy` - Merge PR and deploy
+- `/canary` - Post-deploy canary monitoring
+- `/benchmark` - Performance regression detection
+- `/browse` - Headless browser for QA and browsing
+- `/connect-chrome` - Launch real Chrome controlled by gstack
+- `/qa` - QA test and fix bugs
+- `/qa-only` - QA report only (no fixes)
+- `/design-review` - Visual QA and fix
+- `/setup-browser-cookies` - Import browser cookies
+- `/setup-deploy` - Configure deployment settings
+- `/retro` - Weekly engineering retrospective
+- `/investigate` - Systematic debugging
+- `/document-release` - Post-ship docs update
+- `codex` - OpenAI Codex CLI wrapper
+- `/cso` - Chief Security Officer audit
+- `/autoplan` - Auto-review pipeline
+- `/careful` - Safety guardrails for destructive commands
+- `/freeze` - Restrict edits to a directory
+- `/guard` - Full safety mode (careful + freeze)
+- `/unfreeze` - Clear freeze boundary
+- `/gstack-upgrade` - Upgrade gstack to latest
 
-### Backend ('src/api/' e 'src/middleware/")
+## Skill routing
 
-- "src/api/auth.ts' - endpoints de autenticação (POST /auth/login ja existe)
-- 'src/middleware/oauth.ts" - middleware OAuth (a criar)
-- **Proprietário natural**: Subagente Backend
+When the user's request matches an available skill, ALWAYS invoke it using the Skill
+tool as your FIRST action. Do NOT answer directly, do NOT use other tools first.
+The skill has specialized workflows that produce better results than ad-hoc answers.
 
-### Frontend (src/components/auth/\*)
+Key routing rules:
 
-- "src/components/auth/" - componentes React de autenticação
-- "src/components/auth/LoginForm.tsx' já existe (não modificar)
-- **Proprietário natural**: Subagente Frontend
-  ##\* Testes (tests/")
-- "tests/components/auth/" - testes unitários dos componentes
-- **Proprietário natural**: Subagente Testes
-
-## Contrato entre Módulos
-
-O contrato da API OAuth está definido em docs/api/auth.md'.
-Todos os subagentes devem seguir esse contrato sem alterá-lo.
-
-## Arquivos Compartilhados - NÃO MODIFICAR sem aprovação humana
-
-- "src/types/User.ts' - tipo User compartilhado por todos os módulos
-- "src/config/env.ts' - variáveis de ambiente
-- 'package. json' - dependências (não adicionar sem revisar)
-- "tsconfig.json" - configuração TypeScript
-
-## Regras para Subagentes
-
-1. Cada subagente opera APENAS nos arquivos do seu escopo definido no prompt
-2. Se precisar de um tipo de outro módulo, importe de "src/types/" - não crie duplicatas
-3. Não criar arquivos fora do escopo definido
-4. Dúvidas sobre o contrato → consultar "docs/api/auth.md", não improvisar
-5. Ao terminar, listar todos os arquivos criados/modificados no relatório
+- Product ideas, "is this worth building", active `context-mode`, brainstorming → invoke office-hours
+- Bugs, errors, "why is this broken", 500 errors → invoke investigate
+- Ship, deploy, push, create PR → invoke ship
+- QA, test the site, find bugs → invoke qa
+- Code review, check my diff → invoke review
+- Update docs after shipping → invoke document-release
+- Weekly retro → invoke retro
+- Design system, brand → invoke design-consultation
+- Visual audit, design polish → invoke design-review
+- Architecture review → invoke plan-eng-review
